@@ -17,6 +17,66 @@
         <link rel="stylesheet" href="styles/prettify.css"/>
 		<!-- Ueditor编辑器CSS -->
 		<link href="styles/umeditor.min.css" type="text/css" rel="stylesheet">
+		
+		<script type="text/javascript" src="scripts/jquery.min.js"></script>
+		<script type="text/javascript" src="scripts/baseValue.js"></script>
+		<script type="text/javascript" src="scripts/cookie_util.js"></script>
+		<script type="text/javascript" src="scripts/book.js"></script>
+		<script type="text/javascript">
+			//页面载入完毕后执行
+			$(function(){
+				//加载用户笔记本列表
+				loadUserBooks();
+				//加载笔记列表,给笔记本li绑定单击事件
+				$("#book_ul").on("click","li",function(){
+					//设置笔记本li选中效果
+					$("#book_ul a").removeClass("checked");
+					$(this).find("a").addClass("checked");
+					//获取请求参数
+					var bookId = $(this).data("bookId");
+					$.ajax({
+						"url":path+"/note/loadNotes.do",
+						"type":"post",
+						"data":{"bookId":bookId},
+						"dataType":"json",
+						"success":function(result){
+							if(result.state==0){
+								//清空原有的笔记列表
+								$("#note_ul li").remove();
+								var notes = result.data;
+								for(var i=0;i<notes.length;i++){
+									var noteId = notes[i].cn_note_id;
+									var noteTitle = notes[i].cn_note_title;
+									var noteBody = notes[i].cn_note_body;
+									var sli="";
+									sli+='<li class="online">';
+									sli+='<a  class="checked">';
+									sli+='	<i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i>' +noteTitle+'<button type="button" class="btn btn-default btn-xs btn_position btn_slide_down"><i class="fa fa-chevron-down"></i></button>';
+									sli+='</a>';
+									sli+='<div class="note_menu" tabindex="-1">';
+									sli+='	<dl>';
+									sli+='		<dt><button type="button" class="btn btn-default btn-xs btn_move" title="移动至..."><i class="fa fa-random"></i></button></dt>';
+									sli+='		<dt><button type="button" class="btn btn-default btn-xs btn_share" title="分享"><i class="fa fa-sitemap"></i></button></dt>';
+									sli+='		<dt><button type="button" class="btn btn-default btn-xs btn_delete" title="删除"><i class="fa fa-times"></i></button></dt>';
+									sli+='	</dl>';
+									sli+='</div>';
+								sli+='</li>';
+								}
+								//将noteId绑定到li元素上
+								var $li = $(sli);
+								$li.data("noteId",noteId);
+								$("#note_ul").append($li);
+							}
+						},
+						"error":function(){
+							alert("获取笔记失败！")
+						}
+					});
+				});
+				
+			});
+		</script>
+		
     </head>
     <body class="animated fadeIn">
         <header class="header">
@@ -66,11 +126,9 @@
 					<div class="module" data-toggle="niceScroll">
 						<div class="chat-contact">
 							<div class="contact-body">
-								<ul class="contacts-list">
-									<li class="online">
-									<a  class='checked'>
-									<i class="fa fa-book" title="online" rel="tooltip-bottom">
-									</i> 默认笔记本</a></li>
+								<ul id="book_ul" class="contacts-list">
+									<!-- 动态生成笔记本列表 -->
+									
 								</ul>
 							</div>
 						</div>
@@ -93,19 +151,9 @@
 					<div class="module" data-toggle="niceScroll">
 						<div class="chat-contact">
 							<div class="contact-body">
-								<ul class="contacts-list">
-									<li class="online">
-										<a  class='checked'>
-											<i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i> 使用Java操作符<button type="button" class="btn btn-default btn-xs btn_position btn_slide_down"><i class="fa fa-chevron-down"></i></button>
-										</a>
-										<div class="note_menu" tabindex='-1'>
-											<dl>
-												<dt><button type="button" class="btn btn-default btn-xs btn_move" title='移动至...'><i class="fa fa-random"></i></button></dt>
-												<dt><button type="button" class="btn btn-default btn-xs btn_share" title='分享'><i class="fa fa-sitemap"></i></button></dt>
-												<dt><button type="button" class="btn btn-default btn-xs btn_delete" title='删除'><i class="fa fa-times"></i></button></dt>
-											</dl>
-										</div>
-									</li>
+								<ul id="note_ul" class="contacts-list">
+								<!-- 动态生成笔记列表 -->
+									
 								</ul>
 							</div>
 						</div>

@@ -4,40 +4,8 @@
 <link rel="stylesheet" href="styles/login.css"/>
 <script type="text/javascript" src="scripts/jquery.min.js"></script>
 <script type="text/javascript" src="scripts/baseValue.js"></script>
-<script type="text/javascript">
-	$(function(){
-		$("#login").click(function(){
-			$("#count_span").html("");
-			$("#password_span").html("");
-			//获取参数
-			var name = $("#count").val().trim();
-			var password = $("#password").val().trim();
-			var ok = true;
-			//检测参数格式
-			if(name==""){
-				$("#count_span").html("用户名不能为空");
-				ok=false;
-			}
-			if(password==""){
-				$("#password_span").html("密码不能为空");
-				ok=false;
-			}
-			//发送AJAX请求
-			if(ok){//通过检测
-				$.ajax({
-					"url":path+"/user/login.do",
-					"type":"post",
-					"data":{"name":name,"password":password},
-					"dataType":"json",
-					"success":function(){},
-					"error":function(){
-						alert("服务器异常，登录失败");
-					}
-				});
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="scripts/cookie_util.js"></script>
+<script type="text/javascript" src="scripts/login.js"></script>
 </head>
 	<body>
 		<div class="global">
@@ -79,7 +47,7 @@
 					<dt></dt>
 					<dt>
 						<div class='letter'>
-							用户名:&nbsp;<input type="text" name="" id="regist_username" tabindex='5'/>
+							用户名:&nbsp;<input type="text" name="" id="regist_username" tabindex='5' onblur="checkName()"/>
 							<div class='warning' id='warning_1'><span>该用户名不可用</span></div>
 						</div>
 					</dt>

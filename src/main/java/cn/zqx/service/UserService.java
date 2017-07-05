@@ -9,4 +9,6 @@ public interface UserService {
 	 * @param password密码
 	 */
 	User Login(String name,String password)throws NameException,PasswordException;
+	User regist(String name,String password,String nick)throws NameException,PasswordException;
+	User checkName(String name);
 }

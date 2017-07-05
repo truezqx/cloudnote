@@ -32,4 +32,31 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	public User regist(String name, String password, String nick) throws NameException, PasswordException {
+		User user = userDao.findByName(name);
+		if(user!=null){
+			throw new NameException("用户名已存在");
+		}
+		if(name==null||name.trim().isEmpty()){
+			throw new NameException("用户名不能为空");
+		}
+		if(password==null||password.trim().isEmpty()){
+			throw new PasswordException("密码不能为空");
+		}
+		if(nick==null||nick.trim().isEmpty()){
+			nick=name;
+		}
+		String id = NoteUtil.createId();
+		String token = null;
+		String md5_pwd = NoteUtil.md5(password);
+		user = new User(id,name,md5_pwd,token,nick);
+		userDao.addUser(user);
+		return user;
+	}
+
+	public User checkName(String name) {
+		User user = userDao.findByName(name);
+		return user;
+	}
+
 }

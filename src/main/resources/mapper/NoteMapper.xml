@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.zqx.dao.NoteDao">
+	<select id="findNotesByBookId" parameterType="String" resultType="cn.zqx.entity.Note">
+		SELECT 
+			*
+		FROM
+			cn_note
+		WHERE
+			cn_notebook_id=#{bookId}
+	</select>
+	<select id="findNotesById" parameterType="String" resultType="map">
+		SELECT 
+			cn_note_id,cn_note_title
+		FROM
+			cn_note
+		WHERE
+			cn_notebook_id=#{bookId}
+	</select>
+</mapper>

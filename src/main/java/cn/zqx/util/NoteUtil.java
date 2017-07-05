@@ -2,8 +2,11 @@ package cn.zqx.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
+
+
 
 
 
@@ -27,7 +30,12 @@ public class NoteUtil {
 		
 		return src;
 	}
+	public static String createId(){
+		String id = UUID.randomUUID().toString();
+		return id;
+	}
 	public static void main(String []args){
+		System.out.println(createId());
 		System.out.println(md5("123"));
 		System.out.println(md5("123456"));
 		System.out.println(md5("123").length());

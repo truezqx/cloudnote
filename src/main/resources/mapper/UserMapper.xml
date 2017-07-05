@@ -15,5 +15,15 @@
 		WHERE 
 			cn_user_name=#{name}
 	</select>
-	
+	<insert id="addUser" parameterType="cn.zqx.entity.User">
+		INSERT INTO
+			cn_user (
+				cn_user_id,
+				cn_user_name,
+				cn_user_password,
+				cn_user_token,
+				cn_user_nick
+				)
+		VALUES (#{id},#{name},#{password},#{token},#{nick})
+	</insert>
 </mapper>
