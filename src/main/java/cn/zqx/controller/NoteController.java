@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.zqx.entity.Note;
 import cn.zqx.service.NoteService;
 import cn.zqx.util.JsonResult;
 
@@ -23,6 +24,26 @@ public class NoteController extends BaseController{
 	public JsonResult loadNotes(String bookId){
 		List<Map> notes = noteService.loadNotes(bookId);
 		return new JsonResult(notes);
+	}
+	@RequestMapping("/getNote.do")
+	@ResponseBody
+	public JsonResult getNote(String noteId){
+		Note note = noteService.loadNote(noteId);	
+		return new JsonResult(note);
+	}
+	@RequestMapping("/updateNote.do")
+	@ResponseBody
+	public JsonResult updateNote(String noteId,String title,String body){
+		//System.out.println(noteId+"------- "+title+"------- "+body);
+		boolean success = noteService.updateNote(noteId, title, body);
+		return new JsonResult(success);
+	}
+	
+	@RequestMapping("/addnote.do")
+	@ResponseBody
+	public JsonResult addnote(String userId,String bookId,String noteTitle){
+		Note note = noteService.addNote(userId, bookId, noteTitle);
+		return new JsonResult(note);
 	}
 
 }
