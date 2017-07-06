@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import cn.zqx.dao.UserDao;
+import cn.zqx.entity.Note;
 import cn.zqx.entity.Notebook;
 import cn.zqx.entity.User;
 import cn.zqx.service.NoteService;
@@ -68,6 +69,11 @@ public class TestService {
 	public void test7(){
 		List<Map> notes = noteService.loadNotes("516f6f4f-eaa3-4c76-84ff-530b92c7f64d");
 		System.out.println(notes);
+	}
+	@Test
+	public void test8(){
+		Note note = noteService.loadNote("3621cb2a-a40d-496f-8505-48725462f68d");
+		System.out.println(note);
 	}
 
 }

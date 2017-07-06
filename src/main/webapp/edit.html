@@ -22,58 +22,62 @@
 		<script type="text/javascript" src="scripts/baseValue.js"></script>
 		<script type="text/javascript" src="scripts/cookie_util.js"></script>
 		<script type="text/javascript" src="scripts/book.js"></script>
+		<script type="text/javascript" src="scripts/note.js"></script>
+		<script type="text/javascript" src="scripts/alert.js"></script>
 		<script type="text/javascript">
 			//页面载入完毕后执行
 			$(function(){
 				//加载用户笔记本列表
 				loadUserBooks();
-				//加载笔记列表,给笔记本li绑定单击事件
-				$("#book_ul").on("click","li",function(){
-					//设置笔记本li选中效果
-					$("#book_ul a").removeClass("checked");
-					$(this).find("a").addClass("checked");
-					//获取请求参数
-					var bookId = $(this).data("bookId");
-					$.ajax({
-						"url":path+"/note/loadNotes.do",
-						"type":"post",
-						"data":{"bookId":bookId},
-						"dataType":"json",
-						"success":function(result){
-							if(result.state==0){
-								//清空原有的笔记列表
-								$("#note_ul li").remove();
-								var notes = result.data;
-								for(var i=0;i<notes.length;i++){
-									var noteId = notes[i].cn_note_id;
-									var noteTitle = notes[i].cn_note_title;
-									var noteBody = notes[i].cn_note_body;
-									var sli="";
-									sli+='<li class="online">';
-									sli+='<a  class="checked">';
-									sli+='	<i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i>' +noteTitle+'<button type="button" class="btn btn-default btn-xs btn_position btn_slide_down"><i class="fa fa-chevron-down"></i></button>';
-									sli+='</a>';
-									sli+='<div class="note_menu" tabindex="-1">';
-									sli+='	<dl>';
-									sli+='		<dt><button type="button" class="btn btn-default btn-xs btn_move" title="移动至..."><i class="fa fa-random"></i></button></dt>';
-									sli+='		<dt><button type="button" class="btn btn-default btn-xs btn_share" title="分享"><i class="fa fa-sitemap"></i></button></dt>';
-									sli+='		<dt><button type="button" class="btn btn-default btn-xs btn_delete" title="删除"><i class="fa fa-times"></i></button></dt>';
-									sli+='	</dl>';
-									sli+='</div>';
-								sli+='</li>';
+				//加载笔记列表,给笔记本li绑定单击处理（动态绑定）
+				$("#book_ul").on("click","li",loadBookNotes);
+				//加载笔记内容，给笔记li绑定单击处理
+				$("#note_ul").on("click","li",getNote);
+				//保存笔记
+				$("#save_note").click(updateNote);
+				//弹出创建笔记本对话框
+				$("#add_notebook").click(alertAddBookWindow);
+				//关闭对话框(对所有对话框有效)
+				$("#can").on("click",".cancle,.close",closeWindow);
+				//弹出创建笔记对话框
+				$("#add_note").click(alertAddNoteWindow);
+				//创建笔记本
+				$("#can").on("click","#sure_addbook",addNotebook);
+				//创建笔记
+				$("#can").on("click","#sure_addnote",function(){
+					var $li = $("#book_ul a.checked").parent();
+					var bookId = $li.data("bookId");
+					var userId=getCookie("userId");
+					var noteTitle = $("#input_note").val().trim();
+					var ok=true;
+					if(userId==""){
+						ok=false;
+						Window.location.href("log_in.html");
+					}
+					if(noteTitle==""){
+						ok=false;
+						$("#note_span").html("笔记名称不能为空！");
+					}
+					if(ok){
+						$.ajax({
+							url:path+"/note/addnote.do",
+							type:"post",
+							data:{"userId":userId,"bookId":bookId,"noteTitle":noteTitle},
+							dataType:"json",
+							success:function(result){
+								if(result.state==0){
+									var noteId=result.data.cn_note_id;
+									var noteTitle=result.data.cn_note_title;
+									createNoteLi(noteId,noteTitle);
+									closeWindow();
 								}
-								//将noteId绑定到li元素上
-								var $li = $(sli);
-								$li.data("noteId",noteId);
-								$("#note_ul").append($li);
+							},
+							error:function(){
+								alert("创建笔记失败！")
 							}
-						},
-						"error":function(){
-							alert("获取笔记失败！")
-						}
-					});
+						});
+					}
 				});
-				
 			});
 		</script>
 		
@@ -254,6 +258,7 @@
 								<div class="row" >
 									<div class="col-xs-8">
 										<input type="text" class="form-control" id="input_note_title" placeholder='笔记标题...'>
+										<span id="note_title_span"></span>
 									</div>
 								</div>
 								<!--- 笔记标题 --->
@@ -346,12 +351,14 @@
 		
 		<script type="text/javascript">
 			//重写JS原生alert函数
+			
 				window.alert=function(e){
 					$('#can').load('./alert/alert_error.html',function(){
 						$('#error_info').text(' '+e);
 						$('.opacity_bg').show();
 					});
 				}
+			
 			//实例化Ueditor编辑器
 			var um = UM.getEditor('myEditor');
 		</script>
