@@ -5,6 +5,6 @@ import java.util.List;
 import cn.zqx.entity.Notebook;
 
 public interface NotebookService {
-	List<Notebook> listNotebooks(String userId);
-
+	List<Notebook> listNotebooks(String userId) throws UserNotFoundException;
+	Notebook addNotebook(String userId,String bookName)throws UserNotFoundException;
 }
