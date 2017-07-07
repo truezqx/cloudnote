@@ -71,4 +71,57 @@ public class NoteServiceImpl implements NoteService{
 		return null;
 	}
 
+	public Note removeNote(String userId, String noteId) {
+		if(userId==null||userId.trim().isEmpty()){
+			throw new UserNotFoundException("用户ID为空");
+		}
+		Note note = noteDao.findNoteById(noteId);
+		System.out.println(userId+"   "+note.getCn_user_id());
+		if(note.getCn_user_id().equals(userId)){
+			note = new Note();
+			note.setCn_note_id(noteId);
+			note.setCn_note_status_id("2");
+			Long time = System.currentTimeMillis();
+			note.setCn_note_last_modify_time(time);
+			int row = noteDao.removeNote(note);
+			if(row==1){
+				return note;
+			}
+			return null;
+		}else{
+			throw new UserNotFoundException("没有权限");
+		}
+		
+	}
+
+	public Note moveNote(String userId, String noteId, String bookId) {
+		if(userId==null||userId.trim().isEmpty()){
+			throw new UserNotFoundException("用户ID为空");
+		}
+		Note note = noteDao.findNoteById(noteId);
+		if(note.getCn_user_id().equals(userId)){
+			note = new Note();
+			note.setCn_note_id(noteId);
+			note.setCn_notebook_id(bookId);
+			Long time = System.currentTimeMillis();
+			note.setCn_note_last_modify_time(time);
+			int row = noteDao.moveNote(note);
+			if(row==1){
+				return note;
+			}
+			return null;
+		}else{
+			throw new UserNotFoundException("没有权限");
+		}
+	}
+
+	public void shareNote(String noteId) {
+		Note note = new Note();
+		note.setCn_note_type_id("2");
+		note.setCn_note_id(noteId);
+		Long time = System.currentTimeMillis();
+		note.setCn_note_last_modify_time(time);
+		noteDao.shareNote(note);
+	}
+
 }

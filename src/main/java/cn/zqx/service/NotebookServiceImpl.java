@@ -60,4 +60,27 @@ public class NotebookServiceImpl implements NotebookService{
 		
 	}
 
+	public Notebook removeBook(String userId, String bookId) throws UserNotFoundException {
+		if(userId==null||userId.trim().isEmpty()){
+			throw new UserNotFoundException("ID为空");
+		}
+		User user = userDao.findById(userId);
+		if(user==null){
+			throw new UserNotFoundException("用户不存在");
+		}
+		Notebook notebook = notebookDao.findNotebookById(bookId);
+		if(notebook.getCn_user_id()!=userId){
+			throw new UserNotFoundException("对不起你没有权限！");
+		}
+		notebook = new Notebook();
+		notebook.setCn_user_id(userId);
+		notebook.setCn_notebook_id(bookId);
+		notebook.setCn_notebook_type_id("2");
+		int row = notebookDao.removeBook(notebook);
+		if(row==1){
+			return notebook;
+		}
+		return null;
+	}
+
 }
