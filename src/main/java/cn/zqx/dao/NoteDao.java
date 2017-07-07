@@ -11,4 +11,7 @@ public interface NoteDao {
 	public Note findNoteById(String noteId);
 	public int updateNoteById(Note note);
 	public int addNote(Note note);
+	public int removeNote(Note note);
+	public int moveNote(Note note);
+	public int shareNote(Note note);
 }
