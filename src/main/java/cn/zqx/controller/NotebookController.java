@@ -39,6 +39,27 @@ public class NotebookController {
 		}catch(NotebookNotFoundException e){
 			e.printStackTrace();
 			return new JsonResult(5,e);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new JsonResult(6,e);
+		}
+	}
+	
+	@RequestMapping("/removebook.do")
+	@ResponseBody
+	public JsonResult removebook(String userId,String bookId){
+		try{
+			Notebook notebook = notebookService.removeBook(userId, bookId);
+			return new JsonResult(notebook);
+		}catch(UserNotFoundException e){
+			e.printStackTrace();
+			return new JsonResult(4,e);
+		}catch(NotebookNotFoundException e){
+			e.printStackTrace();
+			return new JsonResult(5,e);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new JsonResult(6,e);
 		}
 	}
 }

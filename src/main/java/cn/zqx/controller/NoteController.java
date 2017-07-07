@@ -45,5 +45,20 @@ public class NoteController extends BaseController{
 		Note note = noteService.addNote(userId, bookId, noteTitle);
 		return new JsonResult(note);
 	}
+	
+	@RequestMapping("/removeNote.do")
+	@ResponseBody
+	public JsonResult removeNote(String userId,String noteId){
+		Note note = noteService.removeNote(userId, noteId);
+		return new JsonResult(note);
+	}
+	
+	@RequestMapping("/moveNote.do")
+	@ResponseBody
+	public JsonResult movaNote(String userId,String noteId,String bookId){
+		Note note = noteService.moveNote(userId, noteId, bookId);
+		return new JsonResult(note);
+	}
+
 
 }
