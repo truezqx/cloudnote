@@ -10,6 +10,7 @@ public class Share implements Serializable{
 	private String cn_share_body;
 	private String cn_note_id;
 	
+	
 	public Share(){}
 
 	public Share(String cn_share_id, String cn_share_title, String cn_share_body, String cn_note_id) {
