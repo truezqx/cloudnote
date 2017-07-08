@@ -1,5 +1,7 @@
 package cn.zqx.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -24,10 +26,24 @@ public class ShareController extends BaseController{
 	public JsonResult addShareNote(String userId,String noteId){
 		
 		Share share = shareService.addShareNote(userId,noteId);
-		noteService.shareNote(noteId);
+
 		return new JsonResult(share);
 		
 		
+	}
+	
+	@RequestMapping("/searchShare.do")
+	@ResponseBody
+	public JsonResult searchShare(String keyword,int page){
+		List<Share> shareNotes = shareService.findLikeTitle(keyword, page);
+		return new JsonResult(shareNotes);
+	}
+	
+	@RequestMapping("/loadShareNote.do")
+	@ResponseBody
+	public JsonResult loadShareNote(String shareId){
+		Share share = shareService.findById(shareId);
+		return new JsonResult(share);
 	}
 
 }
