@@ -21,6 +21,7 @@ public class ShareController extends BaseController{
 	@Resource
 	private NoteService noteService;
 	
+	
 	@RequestMapping("/shareNote.do")
 	@ResponseBody
 	public JsonResult addShareNote(String userId,String noteId){
