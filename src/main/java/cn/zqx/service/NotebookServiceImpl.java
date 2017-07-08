@@ -25,6 +25,7 @@ public class NotebookServiceImpl implements NotebookService{
 		if(userId==null||userId.trim().isEmpty()){
 			throw new UserNotFoundException("ID为空");
 		}
+		System.out.println(userId);
 		User user = userDao.findById(userId);
 		if(user==null){
 			throw new UserNotFoundException("用户不存在");
@@ -38,6 +39,7 @@ public class NotebookServiceImpl implements NotebookService{
 		} else if(bookName==null||bookName.trim().isEmpty()){
 			throw new NotebookNotFoundException("笔记本名不能为空");
 		}
+		
 		User user = userDao.findById(userId);
 		if(user==null){
 			throw new UserNotFoundException("用户不存在");

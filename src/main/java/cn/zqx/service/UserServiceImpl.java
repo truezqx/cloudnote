@@ -3,6 +3,7 @@ package cn.zqx.service;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.zqx.dao.UserDao;
 import cn.zqx.entity.User;
@@ -24,14 +25,14 @@ public class UserServiceImpl implements UserService{
 		if(user==null){
 			throw new NameException("用户名错误");
 		}
-		if(user.getPassword().equals(NoteUtil.md5(password))){
+		if(user.getCn_user_password().equals(NoteUtil.md5(password))){
 			return user;
 		}else{
 			throw new PasswordException("密码错误");
 		}
 		
 	}
-
+	@Transactional
 	public User regist(String name, String password, String nick) throws NameException, PasswordException {
 		User user = userDao.findByName(name);
 		if(user!=null){

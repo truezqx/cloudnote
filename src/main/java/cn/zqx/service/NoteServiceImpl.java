@@ -115,13 +115,6 @@ public class NoteServiceImpl implements NoteService{
 		}
 	}
 
-	public void shareNote(String noteId) {
-		Note note = new Note();
-		note.setCn_note_type_id("2");
-		note.setCn_note_id(noteId);
-		Long time = System.currentTimeMillis();
-		note.setCn_note_last_modify_time(time);
-		noteDao.shareNote(note);
-	}
+	
 
 }
