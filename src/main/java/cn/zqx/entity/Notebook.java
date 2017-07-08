@@ -14,6 +14,7 @@ public class Notebook implements Serializable{
 	//关联User
 	private User user;
 	
+	
 	public User getUser() {
 		return user;
 	}
