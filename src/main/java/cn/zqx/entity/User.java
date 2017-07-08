@@ -4,71 +4,98 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 
-	private static final long serialVersionUID = 1L;
-	private String id;
-	private String name;
-	private String password;
-	private String token;
-	private String nick;
-	
-	public String getNick() {
-		return nick;
-	}
 
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
+	private static final long serialVersionUID = 4628398318742289497L;
+	private String cn_user_id;
+	private String cn_user_name;
+	private String cn_user_password;
+	private String cn_user_token;
+	private String cn_user_nick;
+	
 
 	public User(){};
-	
-	public User(String id, String name, String password, String token, String nick) {
-		this.id = id;
-		this.name = name;
-		this.password = password;
-		this.token = token;
-		this.nick = nick;
+
+	public User(String cn_user_id, String cn_user_name, String cn_user_password, String cn_user_token,
+			String cn_user_nick) {
+		super();
+		this.cn_user_id = cn_user_id;
+		this.cn_user_name = cn_user_name;
+		this.cn_user_password = cn_user_password;
+		this.cn_user_token = cn_user_token;
+		this.cn_user_nick = cn_user_nick;
 	}
 
-	public String getId() {
-		return id;
+
+	public String getCn_user_id() {
+		return cn_user_id;
 	}
-	public void setId(String id) {
-		this.id = id;
+
+
+	public void setCn_user_id(String cn_user_id) {
+		this.cn_user_id = cn_user_id;
 	}
-	public String getName() {
-		return name;
+
+
+	public String getCn_user_name() {
+		return cn_user_name;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+
+	public void setCn_user_name(String cn_user_name) {
+		this.cn_user_name = cn_user_name;
 	}
-	public String getPassword() {
-		return password;
+
+
+	public String getCn_user_password() {
+		return cn_user_password;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+
+
+	public void setCn_user_password(String cn_user_password) {
+		this.cn_user_password = cn_user_password;
 	}
-	public String getToken() {
-		return token;
+
+
+	public String getCn_user_token() {
+		return cn_user_token;
 	}
-	public void setToken(String token) {
-		this.token = token;
+
+
+	public void setCn_user_token(String cn_user_token) {
+		this.cn_user_token = cn_user_token;
 	}
+
+
+	public String getCn_user_nick() {
+		return cn_user_nick;
+	}
+
+
+	public void setCn_user_nick(String cn_user_nick) {
+		this.cn_user_nick = cn_user_nick;
+	}
+
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", password=" + password + ", token=" + token + ", nick=" + nick
-				+ "]";
+		return "User [cn_user_id=" + cn_user_id + ", cn_user_name=" + cn_user_name + ", cn_user_password="
+				+ cn_user_password + ", cn_user_token=" + cn_user_token + ", cn_user_nick=" + cn_user_nick + "]";
 	}
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((cn_user_id == null) ? 0 : cn_user_id.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -79,13 +106,15 @@ public class User implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (cn_user_id == null) {
+			if (other.cn_user_id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!cn_user_id.equals(other.cn_user_id))
 			return false;
 		return true;
-	}
+	};
+	
+	
 	
 	
 
