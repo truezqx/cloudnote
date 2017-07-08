@@ -26,6 +26,9 @@
 		<script type="text/javascript" src="scripts/alert.js"></script>
 		<script type="text/javascript">
 			//页面载入完毕后执行
+			//定义页数和关键字全局变量
+			var page=1;
+			var keyword = "";
 			$(function(){
 				//加载用户笔记本列表
 				loadUserBooks();
@@ -44,40 +47,119 @@
 				//创建笔记本
 				$("#can").on("click","#sure_addbook",addNotebook);
 				//创建笔记
-				$("#can").on("click","#sure_addnote",function(){
-					var $li = $("#book_ul a.checked").parent();
-					var bookId = $li.data("bookId");
-					var userId=getCookie("userId");
-					var noteTitle = $("#input_note").val().trim();
-					var ok=true;
-					if(userId==""){
-						ok=false;
-						Window.location.href("log_in.html");
-					}
-					if(noteTitle==""){
-						ok=false;
-						$("#note_span").html("笔记名称不能为空！");
-					}
-					if(ok){
-						$.ajax({
-							url:path+"/note/addnote.do",
-							type:"post",
-							data:{"userId":userId,"bookId":bookId,"noteTitle":noteTitle},
-							dataType:"json",
-							success:function(result){
-								if(result.state==0){
-									var noteId=result.data.cn_note_id;
-									var noteTitle=result.data.cn_note_title;
-									createNoteLi(noteId,noteTitle);
-									closeWindow();
-								}
-							},
-							error:function(){
-								alert("创建笔记失败！")
-							}
-						});
+				$("#can").on("click","#sure_addnote",createNote);
+				//弹出笔记菜单
+				$("#note_ul").on("click",".btn_slide_down",popNoteMenu);
+				//点击页面隐藏笔记菜单
+				$("body").click(hideNoteMenu);
+				//弹出删除笔记对话框
+				$("#note_ul").on("click",".btn_delete",alertDeleteNote);
+				//删除笔记
+				$("#can").on("click","#delete_note",removeNote);
+				//弹出移动笔记对话框
+				$("#note_ul").on("click",".btn_move",alertMoveNote);
+				//移动笔记
+				$("#can").on("click","#sure_note",moveNote);
+				//分享笔记
+				$("#note_ul").on("click",".btn_share",shareNote);
+				//搜索分享笔记
+				$("#search_note").keydown(function(event){
+					var code = event.keyCode;
+					if(code==13){//13代表回车的code
+						//清除列表
+						$("#share_ul li").remove();
+						//note列表切换
+						$("#pc_part_2").hide();
+						$("#pc_part_4").hide();
+						$("#pc_part_7").hide();
+						$("#pc_part_8").hide();
+						$("#pc_part_6").show();
+						keyword = $("#search_note").val().trim();
+						page=1;
+						searchSharePage(keyword,page);
+						
 					}
 				});
+				//预览显示分享笔记内容
+				$("#share_ul").on("click","li",loadShareNote);
+				
+				//更多按钮事件
+				$("#more_note").click(function(){
+					//获取查询关键值和要显示的页数
+					page = page +1;
+					//发送ajax请求加载数据
+					searchSharePage(keyword,page);
+				});
+				
+				
+				//回收站笔记界面显示
+				$("#rollback_button").click(function(){
+					$("#pc_part_2").hide();
+					$("#pc_part_6").hide();
+					$("#pc_part_7").hide();
+					$("#pc_part_8").hide();
+					$("#pc_part_4").show();
+					
+				});
+				//收藏笔记界面显示
+				$("#like_button").click(function(){
+					$("#pc_part_2").hide();
+					$("#pc_part_4").hide();
+					$("#pc_part_6").hide();
+					$("#pc_part_8").hide();
+					$("#pc_part_7").show();
+				});
+				
+				//活动笔记显示
+				$("#action_button").click(function(){
+					$("#pc_part_2").hide();
+					$("#pc_part_4").hide();
+					$("#pc_part_6").hide();
+					$("#pc_part_7").hide();
+					$("#pc_part_8").show();
+				});
+				
+				
+				
+				/*
+				//弹出删除对话框
+				$("#rollback_button").click(function(){
+					var $li = $("#note_ul a.checked").parent();
+					if($li.length==0){
+						var $li = $("#book_ul a.checked").parent();
+						if($li.length==0){
+							alert("请先选择笔记本或笔记");
+						}else{
+							alertDeleteBook();
+						}
+					}else{
+						alertDeleteNote();
+					}
+					
+				});
+				
+				//删除笔记本
+				$("#can").on("click","#delete_book",function(){
+					var $li = $("#book_ul a.checked").parent();
+					var bookId = $li.data("bookId");
+					var userId = getCookie("userId");
+					$.ajax({
+						url:path+"book/removebook.do",
+						type:"post",
+						data:{"bookId":bookId,"userId":userId},
+						dataType:"json",
+						success:function(result){
+							if(result.state==0){
+								
+							}
+						},
+						error:function(){
+							alert("删除笔记失败！")
+						}
+					});
+					
+				});
+				*/
 			});
 		</script>
 		
@@ -105,7 +187,7 @@
             <form class="form-inline" onsubmit="return false;">
                 <button type="button" class="btn btn-default btn-expand-search"><i class="fa fa-search"></i></button>
                 <div class="toggle-search">
-                    <input type="text" class="form-control" placeholder="搜索笔记" id='search_note'>
+                    <input type="text" class="form-control" placeholder="搜索分享笔记" id='search_note'>
                     <button type="button" class="btn btn-default btn-collapse-search"><i class="fa fa-times"></i></button>
                 </div>
             </form>
@@ -192,7 +274,7 @@
 					<div class="module" data-toggle="niceScroll">
 						<div class="chat-contact">
 							<div class="contact-body">
-								<ul class="contacts-list">
+								<ul class="contacts-list" id="share_ul">
 								</ul>
 							</div>
 						</div>

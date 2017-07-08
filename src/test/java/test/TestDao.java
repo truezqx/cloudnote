@@ -13,13 +13,13 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.sun.jmx.snmp.Timestamp;
-
 import cn.zqx.dao.NoteDao;
 import cn.zqx.dao.NotebookDao;
+import cn.zqx.dao.ShareDao;
 import cn.zqx.dao.UserDao;
 import cn.zqx.entity.Note;
 import cn.zqx.entity.Notebook;
+import cn.zqx.entity.Share;
 import cn.zqx.entity.User;
 import cn.zqx.util.NoteUtil;
 
@@ -28,6 +28,7 @@ public class TestDao {
 	private UserDao userDao;
 	private NotebookDao notebookDao;
 	private NoteDao noteDao;
+	private ShareDao shareDao;
 	
 	@Before
 	public void init(){
@@ -36,6 +37,7 @@ public class TestDao {
 		 userDao = ac.getBean("userDao",UserDao.class);
 		 notebookDao = ac.getBean("notebookDao",NotebookDao.class);
 		 noteDao = ac.getBean("noteDao",NoteDao.class);
+		 shareDao = ac.getBean("shareDao",ShareDao.class);
 	}
 	@Test
 	public void test1() throws SQLException{
@@ -45,18 +47,7 @@ public class TestDao {
 		User user = userDao.findByName("demo1");
 		System.out.println(user);
 	}
-	@Test//插入数据
-	public void test2(){
-		User user = new User();
-		user.setId("1");
-		user.setName("zqx");
-		user.setPassword("123456");
-		user.setToken(null);
-		user.setNick("aaa");
-		System.out.println(user);
-		userDao.addUser
-		(user);
-	}
+	
 	@Test
 	public void test3(){
 		List<Notebook> list= notebookDao.findNotebookByUserId("0b164152-4fd0-4f9a-b272-0b6d4ed316f8");
@@ -105,6 +96,8 @@ public class TestDao {
 		int row = notebookDao.addNotebook(notebook);
 		System.out.println(row);
 	}
+
+
 		
 	
 	
